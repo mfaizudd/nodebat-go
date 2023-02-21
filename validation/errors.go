@@ -14,11 +14,11 @@ type FieldError struct {
 	message string
 	tag     string
 	value   interface{}
-    params  map[string]interface{}
+	params  map[string]interface{}
 }
 
 func NewFieldError(field, message, tag string, value interface{}) *FieldError {
-    params := make(map[string]interface{})
+	params := make(map[string]interface{})
 	return &FieldError{field, message, tag, value, params}
 }
 
@@ -35,11 +35,11 @@ func (e *FieldError) SetMessage(message string) {
 }
 
 func (e *FieldError) SetParam(key string, value interface{}) {
-    e.params[key] = value
+	e.params[key] = value
 }
 
 func (e *FieldError) Param(key string) interface{} {
-    return e.params[key]
+	return e.params[key]
 }
 
 func (e *FieldError) Tag() string {

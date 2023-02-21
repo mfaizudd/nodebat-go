@@ -1,7 +1,7 @@
 package validation
 
 type Validation struct {
-	error    error
+	error       error
 	fieldErrors map[string]*FieldError
 }
 
@@ -13,7 +13,7 @@ func New() *Validation {
 func (v *Validation) Add(field string, validations ...func(field string) (err *FieldError, ok bool)) {
 	for _, validation := range validations {
 		if err, ok := validation(field); !ok && v.fieldErrors[field] == nil {
-            v.fieldErrors[field] = err
+			v.fieldErrors[field] = err
 		}
 	}
 }
