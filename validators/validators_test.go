@@ -79,6 +79,74 @@ func TestIsAlphanumeric(t *testing.T) {
 	}
 }
 
+func TestMin(t *testing.T) {
+    testCases := []struct {
+        value int
+        min int
+        expected bool
+    } {
+        {1, 1, true},
+        {1, 2, false},
+        {2, 1, true},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", Min(testCase.value, testCase.min))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %d is invalid, it should be valid (min %d)`, testCase.value, testCase.min)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %d is valid, it should be invalid (min %d)`, testCase.value, testCase.min)
+        }
+    }
+}
+
+func TestMax(t *testing.T) {
+    testCases := []struct {
+        value int
+        max int
+        expected bool
+    } {
+        {1, 1, true},
+        {1, 2, true},
+        {2, 1, false},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", Max(testCase.value, testCase.max))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %d is invalid, it should be valid (max %d)`, testCase.value, testCase.max)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %d is valid, it should be invalid (max %d)`, testCase.value, testCase.max)
+        }
+    }
+}
+
+func TestRange(t *testing.T) {
+    testCases := []struct {
+        value int
+        min int
+        max int
+        expected bool
+    } {
+        {1, 1, 1, true},
+        {1, 1, 2, true},
+        {1, 2, 3, false},
+        {2, 1, 3, true},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", Range(testCase.value, testCase.min, testCase.max))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %d is invalid, it should be valid (range %d - %d)`, testCase.value, testCase.min, testCase.max)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %d is valid, it should be invalid (range %d - %d)`, testCase.value, testCase.min, testCase.max)
+        }
+    }
+}
+
 func TestIsEmail(t *testing.T) {
 	validValues := []string{
 		"test@email.com",
@@ -127,6 +195,32 @@ func TestMinLength(t *testing.T) {
 		}
 		if !testCase.expected && v.Error() == nil {
 			t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+		}
+	}
+}
+
+func TestMaxLength(t *testing.T) {
+	testCases := []struct {
+		value    string
+		max      int
+		expected bool
+	}{
+		{"test", 4, true},
+		{"test", 3, false},
+		{"test", 2, false},
+		{"test", 1, false},
+		{"test", 0, false},
+		{"", 0, true},
+		{"", 1, true},
+	}
+	for _, testCase := range testCases {
+		v := validation.New()
+		v.Add("test", MaxLength(testCase.value, testCase.max))
+		if testCase.expected && v.Error() != nil {
+			t.Fatalf(`value %q is invalid, it should be valid (max %d)`, testCase.value, testCase.max)
+		}
+		if !testCase.expected && v.Error() == nil {
+			t.Fatalf(`value %q is valid, it should be invalid (max %d)`, testCase.value, testCase.max)
 		}
 	}
 }

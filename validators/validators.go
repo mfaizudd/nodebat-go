@@ -22,6 +22,39 @@ func Required(data interface{}) func(field string) (err *validation.FieldError, 
 	}
 }
 
+// Min checks if the data is at least min
+func Min(data int, min int) func(field string) (err *validation.FieldError, ok bool) {
+    return func(field string) (err *validation.FieldError, ok bool) {
+        msg := fmt.Sprintf("%s must be at least %d", field, min)
+        if data < min {
+            return validation.NewFieldError(field, msg, "min", data), false
+        }
+        return nil, true
+    }
+}
+
+// Max checks if the data is at most max
+func Max(data int, max int) func(field string) (err *validation.FieldError, ok bool) {
+    return func(field string) (err *validation.FieldError, ok bool) {
+        msg := fmt.Sprintf("%s must be at most %d", field, max)
+        if data > max {
+            return validation.NewFieldError(field, msg, "max", data), false
+        }
+        return nil, true
+    }
+}
+
+// Range checks if the data is between min and max
+func Range(data int, min int, max int) func(field string) (err *validation.FieldError, ok bool) {
+    return func(field string) (err *validation.FieldError, ok bool) {
+        msg := fmt.Sprintf("%s must be between %d and %d", field, min, max)
+        if data < min || data > max {
+            return validation.NewFieldError(field, msg, "range", data), false
+        }
+        return nil, true
+    }
+}
+
 // MinLength checks if the data is at least min characters long
 func MinLength(data string, min int) func(field string) (err *validation.FieldError, ok bool) {
 	return func(field string) (err *validation.FieldError, ok bool) {
@@ -31,6 +64,17 @@ func MinLength(data string, min int) func(field string) (err *validation.FieldEr
 		}
 		return nil, true
 	}
+}
+
+// MaxLength checks if the data is at most max characters long
+func MaxLength(data string, max int) func(field string) (err *validation.FieldError, ok bool) {
+    return func(field string) (err *validation.FieldError, ok bool) {
+        msg := fmt.Sprintf("%s must be at most %d characters long", field, max)
+        if len(data) > max {
+            return validation.NewFieldError(field, msg, "max_length", data), false
+        }
+        return nil, true
+    }
 }
 
 // OneOf checks if the data is in the collection
