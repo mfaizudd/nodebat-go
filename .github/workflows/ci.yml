@@ -11,7 +11,7 @@ permissions:
   pull-requests: read
 jobs:
   lint:
-    name: lint
+    name: lint and fmt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v3
@@ -38,6 +38,8 @@ jobs:
           echo ${output}
           if [ "$(echo -n ${output} | wc -l)" -gt 0 ]; then exit 1; fi
   test:
+    name: test
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
