@@ -23,6 +23,8 @@ func Required(data interface{}) func(field string) (err *validation.FieldError, 
 }
 
 // Min checks if the data is at least min
+//
+// Has one parameter: min (int)
 func Min(data int, min int) func(field string) (err *validation.FieldError, ok bool) {
     return func(field string) (err *validation.FieldError, ok bool) {
         msg := fmt.Sprintf("%s must be at least %d", field, min)
@@ -34,6 +36,8 @@ func Min(data int, min int) func(field string) (err *validation.FieldError, ok b
 }
 
 // Max checks if the data is at most max
+//
+// Has one parameter: max (int)
 func Max(data int, max int) func(field string) (err *validation.FieldError, ok bool) {
     return func(field string) (err *validation.FieldError, ok bool) {
         msg := fmt.Sprintf("%s must be at most %d", field, max)
@@ -45,6 +49,8 @@ func Max(data int, max int) func(field string) (err *validation.FieldError, ok b
 }
 
 // Range checks if the data is between min and max
+//
+// Has two parameters: min (int) and max (int)
 func Range(data int, min int, max int) func(field string) (err *validation.FieldError, ok bool) {
     return func(field string) (err *validation.FieldError, ok bool) {
         msg := fmt.Sprintf("%s must be between %d and %d", field, min, max)
@@ -56,6 +62,8 @@ func Range(data int, min int, max int) func(field string) (err *validation.Field
 }
 
 // MinLength checks if the data is at least min characters long
+//
+// Has one parameter: min (int)
 func MinLength(data string, min int) func(field string) (err *validation.FieldError, ok bool) {
 	return func(field string) (err *validation.FieldError, ok bool) {
 		msg := fmt.Sprintf("%s must be at least %d characters long", field, min)
@@ -67,6 +75,8 @@ func MinLength(data string, min int) func(field string) (err *validation.FieldEr
 }
 
 // MaxLength checks if the data is at most max characters long
+//
+// Has one parameter: max (int)
 func MaxLength(data string, max int) func(field string) (err *validation.FieldError, ok bool) {
     return func(field string) (err *validation.FieldError, ok bool) {
         msg := fmt.Sprintf("%s must be at most %d characters long", field, max)
@@ -78,6 +88,8 @@ func MaxLength(data string, max int) func(field string) (err *validation.FieldEr
 }
 
 // OneOf checks if the data is in the collection
+//
+// Has one parameter named "collection" which is a slice of strings
 func OneOf(item string, collection ...string) func(field string) (err *validation.FieldError, ok bool) {
 	return func(field string) (err *validation.FieldError, ok bool) {
 		for _, it := range collection {
@@ -86,7 +98,9 @@ func OneOf(item string, collection ...string) func(field string) (err *validatio
 			}
 		}
 		msg := fmt.Sprintf("%s is not in the collection", field)
-		return validation.NewFieldError(field, msg, "one_of", item), false
+		err = validation.NewFieldError(field, msg, "one_of", item)
+        err.SetParam("collection", collection)
+        return err, false
 	}
 }
 

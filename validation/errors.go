@@ -14,29 +14,43 @@ type FieldError struct {
 	message string
 	tag     string
 	value   interface{}
+    params  map[string]interface{}
 }
 
 func NewFieldError(field, message, tag string, value interface{}) *FieldError {
-    return &FieldError{field, message, tag, value}
+    params := make(map[string]interface{})
+	return &FieldError{field, message, tag, value, params}
 }
 
-func (e FieldError) Field() string {
-    return e.field
+func (e *FieldError) Field() string {
+	return e.field
 }
 
-func (e FieldError) Message() string {
-    return e.message
+func (e *FieldError) Message() string {
+	return e.message
 }
 
-func (e FieldError) Tag() string {
-    return e.tag
+func (e *FieldError) SetMessage(message string) {
+	e.message = message
 }
 
-func (e FieldError) Value() interface{} {
-    return e.value
+func (e *FieldError) SetParam(key string, value interface{}) {
+    e.params[key] = value
 }
 
-func (e FieldError) Error() string {
+func (e *FieldError) Param(key string) interface{} {
+    return e.params[key]
+}
+
+func (e *FieldError) Tag() string {
+	return e.tag
+}
+
+func (e *FieldError) Value() interface{} {
+	return e.value
+}
+
+func (e *FieldError) Error() string {
 	return fmt.Sprintf("%s: %s", e.field, e.message)
 }
 

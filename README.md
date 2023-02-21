@@ -21,24 +21,35 @@ func (s *Student) Validate() error {
 ```
 
 ## Built in validators
-- `Required`
-- `IsAlphanumeric`
-- `MinLength`
-- `In`
-- `IsEmail`
+You can use tags to translate the error message
+
+| Validator      | Tag             |
+|----------------|-----------------|
+| Required       | required        |
+| IsAlphanumeric | is_alphanumeric |
+| MinLength      | min_length      |
+| MaxLength      | max_length      |
+| Min            | min             |
+| Max            | max             |
+| OneOf          | one_of          |
+| IsEmail        | is_email        |
 
 ## Custom validators
 To create a custom validation, you simply need to create a function that 
-returns `func(f string) (m string, s bool)` where `f` is field name, `m`
+returns `func(field string) (err validation.FieldError, ok bool)` where `f` is field name, `m`
 is error message, and `s` is whether the checks is valid
 
 Example: 
 ```go
 // IsEmail checks if the data is a valid email address
-func IsEmail(email string) func(string) (string, bool) {
-	return func(s string) (string, bool) {
-		_, err := mail.ParseAddress(email)
-		return fmt.Sprintf("%s is not a valid email address", email), err == nil
+func IsEmail(email string) func(field string) (err *validation.FieldError, ok bool) {
+	return func(field string) (err *validation.FieldError, ok bool) {
+		_, emailErr := mail.ParseAddress(email)
+		if emailErr != nil {
+			msg := fmt.Sprintf("%s is not a valid email address", field)
+			return validation.NewFieldError(field, msg, "is_email", email), false
+		}
+        return nil, true
 	}
 }
 ```
