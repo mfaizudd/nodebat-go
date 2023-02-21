@@ -144,7 +144,7 @@ func TestIn(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		v := validation.New()
-		v.Add("test", In(testCase.value, testCase.allowed...))
+		v.Add("test", OneOf(testCase.value, testCase.allowed...))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
 		}

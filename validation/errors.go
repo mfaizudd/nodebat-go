@@ -6,30 +6,58 @@ import (
 )
 
 type Error struct {
-	messages map[string][]string
+	errors map[string]*FieldError
 }
 
-func NewError(messages map[string][]string) Error {
-	return Error{messages}
+type FieldError struct {
+	field   string
+	message string
+	tag     string
+	value   interface{}
 }
 
-func (e Error) Errors() map[string][]string {
-	if len(e.messages) > 0 {
-		return e.messages
+func NewFieldError(field, message, tag string, value interface{}) *FieldError {
+    return &FieldError{field, message, tag, value}
+}
+
+func (e FieldError) Field() string {
+    return e.field
+}
+
+func (e FieldError) Message() string {
+    return e.message
+}
+
+func (e FieldError) Tag() string {
+    return e.tag
+}
+
+func (e FieldError) Value() interface{} {
+    return e.value
+}
+
+func (e FieldError) Error() string {
+	return fmt.Sprintf("%s: %s", e.field, e.message)
+}
+
+func NewError(fieldErrors map[string]*FieldError) Error {
+	return Error{fieldErrors}
+}
+
+func (e Error) Errors() map[string]*FieldError {
+	if len(e.errors) > 0 {
+		return e.errors
 	}
 	return nil
 }
 
 func (e Error) Error() string {
-	if len(e.messages) <= 0 {
+	if len(e.errors) <= 0 {
 		return ""
 	}
-	var b strings.Builder
-	for field, errs := range e.messages {
-		_, err := fmt.Fprintf(&b, "%s:%s", field, strings.Join(errs, ","))
-		if err != nil {
-			return ""
-		}
+	messages := make([]string, 0)
+	for _, err := range e.errors {
+		messages = append(messages, err.Error())
 	}
-	return b.String()
+	return strings.Join(messages, ", ")
 }
