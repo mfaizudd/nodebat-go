@@ -10,9 +10,9 @@ func New() *Validation {
 	return &Validation{error: nil, fieldErrors: errors}
 }
 
-func (v *Validation) Add(field string, validations ...func(field string) (err *FieldError, ok bool)) {
+func (v *Validation) Add(field string, validations ...func(field string) *FieldError) {
 	for _, validation := range validations {
-		if err, ok := validation(field); !ok && v.fieldErrors[field] == nil {
+		if err := validation(field); err != nil && v.fieldErrors[field] == nil {
 			v.fieldErrors[field] = err
 		}
 	}
