@@ -31,6 +31,7 @@ You can use tags to translate the error message
 | MaxLength      | max_length      |
 | Min            | min             |
 | Max            | max             |
+| Range          | range           |
 | OneOf          | one_of          |
 | IsEmail        | is_email        |
 
