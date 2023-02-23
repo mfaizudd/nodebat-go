@@ -1,4 +1,5 @@
 # NoDebat-go
+![Coverage](https://img.shields.io/badge/Coverage-82.3%25-brightgreen)
 
 This is a really simple implementation of validation in go
 
