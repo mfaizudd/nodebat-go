@@ -36,20 +36,20 @@ You can use tags to translate the error message
 
 ## Custom validators
 To create a custom validation, you simply need to create a function that 
-returns `func(field string) (err validation.FieldError, ok bool)` where `f` is field name, `m`
+returns `func(field string) *validation.FieldError` where `f` is field name, `m`
 is error message, and `s` is whether the checks is valid
 
 Example: 
 ```go
 // IsEmail checks if the data is a valid email address
-func IsEmail(email string) func(field string) (err *validation.FieldError, ok bool) {
-	return func(field string) (err *validation.FieldError, ok bool) {
+func IsEmail(email string) func(field string) *validation.FieldError {
+	return func(field string) *validation.FieldError {
 		_, emailErr := mail.ParseAddress(email)
 		if emailErr != nil {
 			msg := fmt.Sprintf("%s is not a valid email address", field)
-			return validation.NewFieldError(field, msg, "is_email", email), false
+			return validation.NewFieldError(field, msg, "is_email", email)
 		}
-        return nil, true
+        return nil
 	}
 }
 ```
