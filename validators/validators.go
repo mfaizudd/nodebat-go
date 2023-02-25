@@ -90,7 +90,7 @@ func MaxLength(data string, max int) func(field string) *validation.FieldError {
 // OneOf checks if the data is in the collection
 //
 // Has one parameter named "collection" which is a slice of strings
-func OneOf(item string, collection ...string) func(field string) *validation.FieldError {
+func OneOf[T comparable](item T, collection ...T) func(field string) *validation.FieldError {
 	return func(field string) *validation.FieldError {
 		for _, it := range collection {
 			if item == it {
