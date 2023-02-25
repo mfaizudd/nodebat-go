@@ -29,7 +29,9 @@ func Min(data int, min int) func(field string) *validation.FieldError {
 	return func(field string) *validation.FieldError {
 		msg := fmt.Sprintf("%s must be at least %d", field, min)
 		if data < min {
-			return validation.NewFieldError(field, msg, "min", data)
+			err := validation.NewFieldError(field, msg, "min", data)
+			err.SetParam("min", min)
+			return err
 		}
 		return nil
 	}
@@ -42,7 +44,9 @@ func Max(data int, max int) func(field string) *validation.FieldError {
 	return func(field string) *validation.FieldError {
 		msg := fmt.Sprintf("%s must be at most %d", field, max)
 		if data > max {
-			return validation.NewFieldError(field, msg, "max", data)
+			err := validation.NewFieldError(field, msg, "max", data)
+			err.SetParam("max", max)
+			return err
 		}
 		return nil
 	}
@@ -55,7 +59,10 @@ func Range(data int, min int, max int) func(field string) *validation.FieldError
 	return func(field string) *validation.FieldError {
 		msg := fmt.Sprintf("%s must be between %d and %d", field, min, max)
 		if data < min || data > max {
-			return validation.NewFieldError(field, msg, "range", data)
+			err := validation.NewFieldError(field, msg, "range", data)
+			err.SetParam("min", min)
+			err.SetParam("max", max)
+			return err
 		}
 		return nil
 	}
@@ -68,7 +75,9 @@ func MinLength(data string, min int) func(field string) *validation.FieldError {
 	return func(field string) *validation.FieldError {
 		msg := fmt.Sprintf("%s must be at least %d characters long", field, min)
 		if len(data) < min {
-			return validation.NewFieldError(field, msg, "min_length", data)
+			err := validation.NewFieldError(field, msg, "min_length", data)
+			err.SetParam("min", min)
+			return err
 		}
 		return nil
 	}
@@ -81,7 +90,9 @@ func MaxLength(data string, max int) func(field string) *validation.FieldError {
 	return func(field string) *validation.FieldError {
 		msg := fmt.Sprintf("%s must be at most %d characters long", field, max)
 		if len(data) > max {
-			return validation.NewFieldError(field, msg, "max_length", data)
+			err := validation.NewFieldError(field, msg, "max_length", data)
+			err.SetParam("max", max)
+			return err
 		}
 		return nil
 	}
@@ -98,7 +109,7 @@ func OneOf[T comparable](item T, collection ...T) func(field string) *validation
 			}
 		}
 		msg := fmt.Sprintf("%s is not in the collection", field)
-        err := validation.NewFieldError(field, msg, "one_of", item)
+		err := validation.NewFieldError(field, msg, "one_of", item)
 		err.SetParam("collection", collection)
 		return err
 	}
