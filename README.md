@@ -35,6 +35,10 @@ You can use tags to translate the error message
 | Range          | range           |
 | OneOf          | one_of          |
 | IsEmail        | is_email        |
+| IsISO8601      | is_iso8601      |
+| IsISO8601Date  | is_iso8601_date |
+| IsPhone        | is_phone        |
+| IsUUID         | is_uuid         |
 
 ## Custom validators
 To create a custom validation, you simply need to create a function that 
