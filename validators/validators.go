@@ -142,44 +142,44 @@ func IsAlphanumeric(value string) func(field string) *validation.FieldError {
 
 // IsISO8601 checks if the data is a valid ISO8601 date
 func IsISO8601(date string) func(field string) *validation.FieldError {
-    return func(field string) *validation.FieldError {
-        if _, err := time.Parse(time.RFC3339, date); err != nil {
-            msg := fmt.Sprintf("%s is not a valid ISO8601 date", field)
-            return validation.NewFieldError(field, msg, "is_iso8601", date)
-        }
-        return nil
-    }
+	return func(field string) *validation.FieldError {
+		if _, err := time.Parse(time.RFC3339, date); err != nil {
+			msg := fmt.Sprintf("%s is not a valid ISO8601 date", field)
+			return validation.NewFieldError(field, msg, "is_iso8601", date)
+		}
+		return nil
+	}
 }
 
 // IsISO8601Date checks if the data is a valid ISO8601 date
 func IsISO8601Date(date string) func(field string) *validation.FieldError {
-    return func(field string) *validation.FieldError {
-        if _, err := time.Parse("2006-01-02", date); err != nil {
-            msg := fmt.Sprintf("%s is not a valid ISO8601 date", field)
-            return validation.NewFieldError(field, msg, "is_iso8601_date", date)
-        }
-        return nil
-    }
+	return func(field string) *validation.FieldError {
+		if _, err := time.Parse("2006-01-02", date); err != nil {
+			msg := fmt.Sprintf("%s is not a valid ISO8601 date", field)
+			return validation.NewFieldError(field, msg, "is_iso8601_date", date)
+		}
+		return nil
+	}
 }
 
 // IsPhone checks if the data is a valid phone number
 func IsPhone(phone string) func(field string) *validation.FieldError {
-    return func(field string) *validation.FieldError {
-        if !regexp.MustCompile(`^(\+?)([0-9])+$`).Match([]byte(phone)) {
-            msg := fmt.Sprintf("%s is not a valid phone number", field)
-            return validation.NewFieldError(field, msg, "is_phone", phone)
-        }
-        return nil
-    }
+	return func(field string) *validation.FieldError {
+		if !regexp.MustCompile(`^(\+?)([0-9])+$`).Match([]byte(phone)) {
+			msg := fmt.Sprintf("%s is not a valid phone number", field)
+			return validation.NewFieldError(field, msg, "is_phone", phone)
+		}
+		return nil
+	}
 }
 
 // IsUUID checks if the data is a valid UUID
 func IsUUID(input string) func(field string) *validation.FieldError {
-    return func(field string) *validation.FieldError {
-        if _, err := uuid.Parse(input); err != nil {
-            msg := fmt.Sprintf("%s is not a valid UUID", field)
-            return validation.NewFieldError(field, msg, "is_uuid", input)
-        }
-        return nil
-    }
+	return func(field string) *validation.FieldError {
+		if _, err := uuid.Parse(input); err != nil {
+			msg := fmt.Sprintf("%s is not a valid UUID", field)
+			return validation.NewFieldError(field, msg, "is_uuid", input)
+		}
+		return nil
+	}
 }
