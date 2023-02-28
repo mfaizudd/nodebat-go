@@ -247,3 +247,91 @@ func TestIn(t *testing.T) {
 		}
 	}
 }
+
+func TestIsISO8601(t *testing.T) {
+    testCases := []struct {
+        value    string
+        expected bool
+    }{
+        {"2018-01-01T00:00:00Z", true},
+        {"2018-01-01T00:00:00+00:00", true},
+        {"2018-01-01T00:00:00+01:00", true},
+        {"2018-01-01T00:00:00-01:00", true},
+        {"testdate", false},
+        {"2018-01-01T00:00:00+01", false},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", IsISO8601(testCase.value))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
+}
+
+func TestIsISO8601Date(t *testing.T) {
+    testCases := []struct {
+        value    string
+        expected bool
+    }{
+        {"2018-01-01", true},
+        {"testdate", false},
+        {"2018-01-01T00:00:00+01:00", false},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", IsISO8601Date(testCase.value))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
+}
+
+func TestIsPhone(t *testing.T) {
+    testCases := []struct {
+        value    string
+        expected bool
+    }{
+        {"+1 1234567890", false},
+        {"+6281234567890", true},
+        {"a phone", false},
+        {"085211111111", true},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", IsPhone(testCase.value))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
+}
+
+func TestIsUUID(t *testing.T) {
+    testCases := []struct {
+        value    string
+        expected bool
+    }{
+        {"a uuid", false},
+        {"6ba7b810-9dad-11d1-80b4-00c04fd430c8", true},
+        {"aVeryLongStringThatIsNotAUUID", false},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", IsUUID(testCase.value))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
+}
