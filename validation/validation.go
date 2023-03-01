@@ -5,12 +5,14 @@ type Validation struct {
 	fieldErrors map[string]*FieldError
 }
 
+type Validator func(field string) *FieldError
+
 func New() *Validation {
 	errors := make(map[string]*FieldError, 0)
 	return &Validation{error: nil, fieldErrors: errors}
 }
 
-func (v *Validation) Add(field string, validations ...func(field string) *FieldError) {
+func (v *Validation) Add(field string, validations ...Validator) {
 	for _, validation := range validations {
 		if err := validation(field); err != nil && v.fieldErrors[field] == nil {
 			v.fieldErrors[field] = err

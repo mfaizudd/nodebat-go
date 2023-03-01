@@ -1,8 +1,10 @@
 package validators
 
 import (
-	"github.com/mfaizudd/nodebat-go/validation"
 	"testing"
+	"time"
+
+	"github.com/mfaizudd/nodebat-go/validation"
 )
 
 func TestRequiredValidator(t *testing.T) {
@@ -225,6 +227,30 @@ func TestMaxLength(t *testing.T) {
 	}
 }
 
+func TestLength(t *testing.T) {
+	testCases := []struct {
+		value    string
+		min      int
+		max      int
+		expected bool
+	}{
+		{"test", 4, 4, true},
+		{"test", 3, 4, true},
+		{"test", 2, 3, false},
+		{"test", 5, 6, false},
+	}
+	for _, testCase := range testCases {
+		v := validation.New()
+		v.Add("test", Length(testCase.value, testCase.min, testCase.max))
+		if testCase.expected && v.Error() != nil {
+			t.Fatalf(`value %q is invalid, it should be valid (min %d, max %d)`, testCase.value, testCase.min, testCase.max)
+		}
+		if !testCase.expected && v.Error() == nil {
+			t.Fatalf(`value %q is valid, it should be invalid (min %d, max %d)`, testCase.value, testCase.min, testCase.max)
+		}
+	}
+}
+
 func TestIn(t *testing.T) {
 	testCases := []struct {
 		value    string
@@ -334,4 +360,92 @@ func TestIsUUID(t *testing.T) {
 			t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
 		}
 	}
+}
+
+func TestIsOnlyDigits(t *testing.T) {
+    testCases := []struct {
+        value    string
+        expected bool
+    }{
+        {"a string", false},
+        {"123", true},
+        {"-123", false}, // negative sign is not a digit
+        {"aVeryLongStringThatIsNotOnlyDigits", false},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", IsOnlyDigits(testCase.value))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
+}
+
+func TestMinDate(t *testing.T) {
+    now := time.Now()
+    testCases := []struct {
+        value    time.Time
+        expected bool
+    }{
+        {now, true},
+        {now.AddDate(0, 0, -1), false},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", MinDate(testCase.value, now))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
+}
+
+func TestMaxDate(t *testing.T) {
+    now := time.Now()
+    testCases := []struct {
+        value    time.Time
+        expected bool
+    }{
+        {now, true},
+        {now.AddDate(0, 0, 1), false},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", MaxDate(testCase.value, now))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
+}
+
+func TestBetweenDate(t *testing.T) {
+    now := time.Now()
+    testCases := []struct {
+        value    time.Time
+        min      time.Time
+        max      time.Time
+        expected bool
+    }{
+        {now, now.AddDate(0, 0, -1), now.AddDate(0, 0, 1), true},
+        {now, now.AddDate(0, 0, 1), now.AddDate(0, 0, 2), false},
+        {now, now.AddDate(0, 0, -2), now.AddDate(0, 0, -1), false},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", BetweenDate(testCase.value, testCase.min, testCase.max))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
 }
