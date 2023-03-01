@@ -42,6 +42,14 @@ func (e *FieldError) Param(key string) interface{} {
 	return e.params[key]
 }
 
+func (e *FieldError) Params() map[string]interface{} {
+    return e.params
+}
+
+func (e *FieldError) HasParams() bool {
+    return len(e.params) > 0
+}
+
 func (e *FieldError) Tag() string {
 	return e.tag
 }
