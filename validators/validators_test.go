@@ -27,6 +27,32 @@ func TestRequiredValidator(t *testing.T) {
 	}
 }
 
+func TestRequiredInterface(t *testing.T) {
+    someStruct := struct{}{}
+    testCases := []struct{
+        value interface{}
+        valid bool
+    }{
+        {nil, false},
+        {interface{}(nil), false},
+        {(*string)(nil), false},
+        {"", false},
+        {"test", true},
+        {someStruct, true},
+        {(*struct{})(nil), false},
+    }
+    for _, testCase := range testCases {
+        v := validation.New()
+        v.Add("test", Required(testCase.value))
+        if testCase.valid && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.valid && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
+}
+
 func TestIsAlphanumeric(t *testing.T) {
 	validValues := []string{
 		"test",

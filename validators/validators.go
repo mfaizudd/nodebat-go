@@ -3,6 +3,7 @@ package validators
 import (
 	"fmt"
 	"net/mail"
+	"reflect"
 	"regexp"
 	"time"
 
@@ -14,7 +15,7 @@ import (
 func Required(data interface{}) validation.Validator {
 	return func(field string) *validation.FieldError {
 		msg := fmt.Sprintf("%s is required", field)
-		if data == nil {
+		if data == nil || (reflect.ValueOf(data).Kind() == reflect.Ptr && reflect.ValueOf(data).IsNil()) {
 			return validation.NewFieldError(field, msg, "required", nil)
 		}
 		if str, ok := data.(string); ok && str == "" {
