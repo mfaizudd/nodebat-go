@@ -1,10 +1,8 @@
-package validators
+package validation
 
 import (
 	"testing"
 	"time"
-
-	"github.com/mfaizudd/nodebat-go/validation"
 )
 
 func TestRequiredValidator(t *testing.T) {
@@ -14,13 +12,13 @@ func TestRequiredValidator(t *testing.T) {
 		"test test test",
 	}
 	for _, value := range validValues {
-		v := validation.New()
+		v := New()
 		v.Add("test", Required(value))
 		if v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, value)
 		}
 	}
-	v := validation.New()
+	v := New()
 	v.Add("test", Required(""))
 	if v.Error() == nil {
 		t.Fatalf(`value %q is valid, it should be invalid`, "")
@@ -42,7 +40,7 @@ func TestRequiredInterface(t *testing.T) {
         {(*struct{})(nil), false},
     }
     for _, testCase := range testCases {
-        v := validation.New()
+        v := New()
         v.Add("test", Required(testCase.value))
         if testCase.valid && v.Error() != nil {
             t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -60,7 +58,7 @@ func TestIsAlphanumeric(t *testing.T) {
 		"testtesttest",
 	}
 	for _, value := range validValues {
-		v := validation.New()
+		v := New()
 		v.Add("test", IsAlphanumeric(value))
 		if v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, value)
@@ -99,7 +97,7 @@ func TestIsAlphanumeric(t *testing.T) {
 		"test/",
 	}
 	for _, value := range invalidValues {
-		v := validation.New()
+		v := New()
 		v.Add("test", IsAlphanumeric(value))
 		if v.Error() == nil {
 			t.Fatalf(`value %q is valid, it should be invalid`, value)
@@ -118,7 +116,7 @@ func TestMin(t *testing.T) {
 		{2, 1, true},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", Min(testCase.value, testCase.min))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %d is invalid, it should be valid (min %d)`, testCase.value, testCase.min)
@@ -140,7 +138,7 @@ func TestMax(t *testing.T) {
 		{2, 1, false},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", Max(testCase.value, testCase.max))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %d is invalid, it should be valid (max %d)`, testCase.value, testCase.max)
@@ -164,7 +162,7 @@ func TestRange(t *testing.T) {
 		{2, 1, 3, true},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", Range(testCase.value, testCase.min, testCase.max))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %d is invalid, it should be valid (range %d - %d)`, testCase.value, testCase.min, testCase.max)
@@ -182,7 +180,7 @@ func TestIsEmail(t *testing.T) {
 		"go@goo.goo.go",
 	}
 	for _, value := range validValues {
-		v := validation.New()
+		v := New()
 		v.Add("test", IsEmail(value))
 		if v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, value)
@@ -194,7 +192,7 @@ func TestIsEmail(t *testing.T) {
 		"testemail@",
 	}
 	for _, value := range invalidValues {
-		v := validation.New()
+		v := New()
 		v.Add("test", IsEmail(value))
 		if v.Error() == nil {
 			t.Fatalf(`value %q is valid, it should be invalid`, value)
@@ -216,7 +214,7 @@ func TestMinLength(t *testing.T) {
 		{"", 1, false},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", MinLength(testCase.value, testCase.min))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -242,7 +240,7 @@ func TestMaxLength(t *testing.T) {
 		{"", 1, true},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", MaxLength(testCase.value, testCase.max))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid (max %d)`, testCase.value, testCase.max)
@@ -266,7 +264,7 @@ func TestLength(t *testing.T) {
 		{"test", 5, 6, false},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", Length(testCase.value, testCase.min, testCase.max))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid (min %d, max %d)`, testCase.value, testCase.min, testCase.max)
@@ -289,7 +287,7 @@ func TestIn(t *testing.T) {
 		{"test", []string{}, false},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", OneOf(testCase.value, testCase.allowed...))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -313,7 +311,7 @@ func TestIsISO8601(t *testing.T) {
 		{"2018-01-01T00:00:00+01", false},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", IsISO8601(testCase.value))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -334,7 +332,7 @@ func TestIsISO8601Date(t *testing.T) {
 		{"2018-01-01T00:00:00+01:00", false},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", IsISO8601Date(testCase.value))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -356,7 +354,7 @@ func TestIsPhone(t *testing.T) {
 		{"085211111111", true},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", IsPhone(testCase.value))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -377,7 +375,7 @@ func TestIsUUID(t *testing.T) {
 		{"aVeryLongStringThatIsNotAUUID", false},
 	}
 	for _, testCase := range testCases {
-		v := validation.New()
+		v := New()
 		v.Add("test", IsUUID(testCase.value))
 		if testCase.expected && v.Error() != nil {
 			t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -399,7 +397,7 @@ func TestIsOnlyDigits(t *testing.T) {
         {"aVeryLongStringThatIsNotOnlyDigits", false},
     }
     for _, testCase := range testCases {
-        v := validation.New()
+        v := New()
         v.Add("test", IsOnlyDigits(testCase.value))
         if testCase.expected && v.Error() != nil {
             t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -420,7 +418,7 @@ func TestMinDate(t *testing.T) {
         {now.AddDate(0, 0, -1), false},
     }
     for _, testCase := range testCases {
-        v := validation.New()
+        v := New()
         v.Add("test", MinDate(testCase.value, now))
         if testCase.expected && v.Error() != nil {
             t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -441,7 +439,7 @@ func TestMaxDate(t *testing.T) {
         {now.AddDate(0, 0, 1), false},
     }
     for _, testCase := range testCases {
-        v := validation.New()
+        v := New()
         v.Add("test", MaxDate(testCase.value, now))
         if testCase.expected && v.Error() != nil {
             t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
@@ -465,7 +463,7 @@ func TestBetweenDate(t *testing.T) {
         {now, now.AddDate(0, 0, -2), now.AddDate(0, 0, -1), false},
     }
     for _, testCase := range testCases {
-        v := validation.New()
+        v := New()
         v.Add("test", BetweenDate(testCase.value, testCase.min, testCase.max))
         if testCase.expected && v.Error() != nil {
             t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)

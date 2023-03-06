@@ -5,11 +5,13 @@ type Validation struct {
 	fieldErrors map[string]*FieldError
 }
 
-type Validator func(field string) *FieldError
-
 func New() *Validation {
 	errors := make(map[string]*FieldError, 0)
 	return &Validation{error: nil, fieldErrors: errors}
+}
+
+func (v *Validation) Builder(field string, value interface{}) *Builder {
+    return NewBuilder(v, field, value)
 }
 
 func (v *Validation) Add(field string, validations ...Validator) {
@@ -17,6 +19,12 @@ func (v *Validation) Add(field string, validations ...Validator) {
 		if err := validation(field); err != nil && v.fieldErrors[field] == nil {
 			v.fieldErrors[field] = err
 		}
+	}
+}
+
+func (v *Validation) AddError(field string, err *FieldError) {
+	if v.fieldErrors[field] == nil {
+		v.fieldErrors[field] = err
 	}
 }
 
