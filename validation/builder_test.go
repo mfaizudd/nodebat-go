@@ -8,7 +8,7 @@ import (
 func TestValidateIsCorrect(t *testing.T) {
 	v := New()
 
-    //         field, value
+	//         field, value
 	v.Builder("minmax", 6).
 		Min(5).
 		Max(10)

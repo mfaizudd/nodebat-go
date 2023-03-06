@@ -43,7 +43,7 @@ func (s *Student) Validate() error {
 }
 ```
 
-However, when using builder, you will lost the ability of
+However, when using builder, you will lose the ability of
 compile time checks of type in validators. for validators
 like min, max, etc. where if the value is not the specific
 type that's required by the validator, the validation will

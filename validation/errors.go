@@ -43,11 +43,11 @@ func (e *FieldError) Param(key string) interface{} {
 }
 
 func (e *FieldError) Params() map[string]interface{} {
-    return e.params
+	return e.params
 }
 
 func (e *FieldError) HasParams() bool {
-    return len(e.params) > 0
+	return len(e.params) > 0
 }
 
 func (e *FieldError) Tag() string {

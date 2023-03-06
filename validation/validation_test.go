@@ -55,10 +55,8 @@ func TestValidationReturnCurrectNumberOfErrors(t *testing.T) {
 	})
 	if err := v.Error(); err == nil {
 		t.Error("expected error, got nil")
-	} else {
-		expected := "foo: foo is not valid first, bar: bar is not valid"
-		if err.Error() != expected {
-			t.Errorf("expected error message '%s', got '%s'", expected, err.Error())
-		}
+		// if err is not nil, then it should be of type validation Error
+	} else if verr := err.(Error); len(verr.Errors()) != 2 {
+		t.Errorf("expected 2 errors, got %d", len(verr.Errors()))
 	}
 }

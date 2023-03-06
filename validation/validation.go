@@ -11,7 +11,7 @@ func New() *Validation {
 }
 
 func (v *Validation) Builder(field string, value interface{}) *Builder {
-    return NewBuilder(v, field, value)
+	return NewBuilder(v, field, value)
 }
 
 func (v *Validation) Add(field string, validations ...Validator) {
