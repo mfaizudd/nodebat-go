@@ -29,9 +29,9 @@ func Required(data interface{}) Validator {
 // Min checks if the data is at least min
 //
 // Has one parameter: min (int)
-func Min(data int, min int) Validator {
+func Min[T Number](data T, min T) Validator {
 	return func(field string) *FieldError {
-		msg := fmt.Sprintf("%s must be at least %d", field, min)
+		msg := fmt.Sprintf("%s must be at least %v", field, min)
 		if data < min {
 			err := NewFieldError(field, msg, "min", data)
 			err.SetParam("min", min)
@@ -44,9 +44,9 @@ func Min(data int, min int) Validator {
 // Max checks if the data is at most max
 //
 // Has one parameter: max (int)
-func Max(data int, max int) Validator {
+func Max[T Number](data T, max T) Validator {
 	return func(field string) *FieldError {
-		msg := fmt.Sprintf("%s must be at most %d", field, max)
+		msg := fmt.Sprintf("%s must be at most %v", field, max)
 		if data > max {
 			err := NewFieldError(field, msg, "max", data)
 			err.SetParam("max", max)
@@ -59,9 +59,9 @@ func Max(data int, max int) Validator {
 // Range checks if the data is between min and max
 //
 // Has two parameters: min (int) and max (int)
-func Range(data int, min int, max int) Validator {
+func Range[T Number](data T, min T, max T) Validator {
 	return func(field string) *FieldError {
-		msg := fmt.Sprintf("%s must be between %d and %d", field, min, max)
+		msg := fmt.Sprintf("%s must be between %v and %v", field, min, max)
 		if data < min || data > max {
 			err := NewFieldError(field, msg, "range", data)
 			err.SetParam("min", min)

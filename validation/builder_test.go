@@ -59,7 +59,7 @@ func TestValidateIsCorrect(t *testing.T) {
 
 	err := v.Error()
 	if err != nil {
-		t.Error("Expected error to be nil")
+		t.Error("Expected error to be nil, got: ", err)
 	}
 }
 

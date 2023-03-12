@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -8,7 +9,7 @@ import (
 func ValidateType[T any](value interface{}, builder *Builder) (T, bool) {
 	v, ok := value.(T)
 	if !ok {
-		builder.add("Invalid type", "invalid_type")
+        builder.add(fmt.Sprintf("Invalid type: expected %T got %T, field: %v", v, value, builder.field), "invalid_type")
 	}
 	return v, ok
 }
