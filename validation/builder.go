@@ -243,3 +243,17 @@ func (v *Builder) Custom(validator Validator) *Builder {
 }
 
 // MinCount checks if the slice/array/map has a minimum number of elements
+//
+// Has one parameter: minCount (int)
+func (v *Builder) MinCount(minCount int) *Builder {
+    v.validation.Add(v.field, MinCount(v.value, minCount))
+    return v
+}
+
+// MaxCount checks if the slice/array/map has a maximum number of elements
+//
+// Has one parameter: maxCount (int)
+func (v *Builder) MaxCount(maxCount int) *Builder {
+    v.validation.Add(v.field, MaxCount(v.value, maxCount))
+    return v
+}
