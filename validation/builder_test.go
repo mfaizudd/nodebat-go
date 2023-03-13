@@ -57,6 +57,12 @@ func TestValidateIsCorrect(t *testing.T) {
 	v.Builder("between_date", time.Now()).
 		BetweenDate(time.Now().AddDate(0, 0, -1), time.Now().AddDate(0, 0, 1))
 
+    array := []string{"test", "test2"}
+
+    v.Builder("min_max_count", array).
+        MinCount(1).
+        MaxCount(10)
+
 	err := v.Error()
 	if err != nil {
 		t.Error("Expected error to be nil, got: ", err)
