@@ -258,3 +258,51 @@ func BetweenDate(date time.Time, minDate time.Time, maxDate time.Time) Validator
 		return nil
 	}
 }
+
+// MinCount checks if the length of the array/slice/map is greater than or equal to the given number
+//
+// Has one parameter: minCount (int)
+func MinCount(array interface{}, minCount int) Validator {
+	return func(field string) *FieldError {
+		switch reflect.TypeOf(array).Kind() {
+		case reflect.Slice, reflect.Array, reflect.Map:
+			v := reflect.ValueOf(array)
+			if v.Len() < minCount {
+				msg := fmt.Sprintf("%s must have at least %d items", field, minCount)
+				err := NewFieldError(field, msg, "min_count", array)
+				err.SetParam("min_count", minCount)
+				return err
+			}
+		default:
+			msg := fmt.Sprintf("%s must be an array or slice", field)
+			err := NewFieldError(field, msg, "min_count", array)
+			err.SetParam("min_count", minCount)
+			return err
+		}
+        return nil
+	}
+}
+
+// MaxCount checks if the length of the array/slice/map is less than or equal to the given number
+//
+// Has one parameter: maxCount (int)
+func MaxCount(array interface{}, maxCount int) Validator {
+	return func(field string) *FieldError {
+		switch reflect.TypeOf(array).Kind() {
+		case reflect.Slice, reflect.Array, reflect.Map:
+			v := reflect.ValueOf(array)
+			if v.Len() > maxCount {
+				msg := fmt.Sprintf("%s must have at most %d items", field, maxCount)
+				err := NewFieldError(field, msg, "max_count", array)
+				err.SetParam("max_count", maxCount)
+				return err
+			}
+		default:
+			msg := fmt.Sprintf("%s must be an array or slice", field)
+			err := NewFieldError(field, msg, "max_count", array)
+			err.SetParam("max_count", maxCount)
+			return err
+		}
+        return nil
+	}
+}

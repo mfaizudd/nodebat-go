@@ -31,6 +31,36 @@ func (v *Builder) add(message, tag string) {
 	v.validation.AddError(v.field, err)
 }
 
+func (v *Builder) getInt() int64 {
+    var value int64
+    switch val := v.value.(type) {
+    case int:
+        value = int64(val)
+    case int8:
+        value = int64(val)
+    case int16:
+        value = int64(val)
+    case int32:
+        value = int64(val)
+    case int64:
+        value = val
+    case uint:
+        value = int64(val)
+    case uint8:
+        value = int64(val)
+    case uint16:
+        value = int64(val)
+    case uint32:
+        value = int64(val)
+    // Since we are using int64, we can't use uint64
+    // we can't use float32 or float64 either
+    default:
+        v.add(fmt.Sprintf("Invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
+    }
+    return value
+}
+
+
 // Required checks if the data is nil or empty string
 func (v *Builder) Required() *Builder {
 	v.validation.Add(v.field, Required(v.value))
@@ -40,22 +70,18 @@ func (v *Builder) Required() *Builder {
 // Min checks if the data is at least min
 //
 // Has one parameter: min (int)
-func (v *Builder) Min(min int) *Builder {
-	value, ok := ValidateType[int](v.value, v)
-	if ok {
-		v.validation.Add(v.field, Min(value, min))
-	}
-	return v
+func (v *Builder) Min(min int64) *Builder {
+    value := v.getInt()
+    v.validation.Add(v.field, Min(value, min))
+    return v
 }
 
 // Max checks if the data is at most max
 //
 // Has one parameter: max (int)
-func (v *Builder) Max(max int) *Builder {
-	value, ok := ValidateType[int](v.value, v)
-	if ok {
-		v.validation.Add(v.field, Max(value, max))
-	}
+func (v *Builder) Max(max int64) *Builder {
+    value := v.getInt()
+    v.validation.Add(v.field, Max(value, max))
 	return v
 }
 
@@ -215,3 +241,5 @@ func (v *Builder) Custom(validator Validator) *Builder {
 	v.validation.Add(v.field, validator)
 	return v
 }
+
+// MinCount checks if the slice/array/map has a minimum number of elements
