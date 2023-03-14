@@ -23,7 +23,7 @@ func TestValidation(t *testing.T) {
 	if err := v.Error(); err == nil {
 		t.Error("expected error, got nil")
 	} else if verr := err.(Error); len(verr.Errors()) != 2 {
-        t.Errorf("expected 2 errors, got %d", len(verr.Errors()))
+		t.Errorf("expected 2 errors, got %d", len(verr.Errors()))
 	}
 }
 

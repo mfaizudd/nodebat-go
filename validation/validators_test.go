@@ -475,43 +475,43 @@ func TestBetweenDate(t *testing.T) {
 }
 
 func TestMinCount(t *testing.T) {
-    testCases := []struct {
-        value []interface{}
-        min int
-        expected bool
-    }{
-        {[]interface{}{1, 2, 3}, 2, true},
-        {[]interface{}{1, 2, 3}, 4, false},
-    }
-    for _, testCase := range testCases {
-        v := New()
-        v.Add("test", MinCount(testCase.value, testCase.min))
-        if testCase.expected && v.Error() != nil {
-            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
-        }
-        if !testCase.expected && v.Error() == nil {
-            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
-        }
-    }
+	testCases := []struct {
+		value    []interface{}
+		min      int
+		expected bool
+	}{
+		{[]interface{}{1, 2, 3}, 2, true},
+		{[]interface{}{1, 2, 3}, 4, false},
+	}
+	for _, testCase := range testCases {
+		v := New()
+		v.Add("test", MinCount(testCase.value, testCase.min))
+		if testCase.expected && v.Error() != nil {
+			t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+		}
+		if !testCase.expected && v.Error() == nil {
+			t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+		}
+	}
 }
 
 func TestMaxCount(t *testing.T) {
-    testCases := []struct {
-        value []interface{}
-        max int
-        expected bool
-    }{
-        {[]interface{}{1, 2, 3}, 4, true},
-        {[]interface{}{1, 2, 3}, 2, false},
-    }
-    for _, testCase := range testCases {
-        v := New()
-        v.Add("test", MaxCount(testCase.value, testCase.max))
-        if testCase.expected && v.Error() != nil {
-            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
-        }
-        if !testCase.expected && v.Error() == nil {
-            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
-        }
-    }
+	testCases := []struct {
+		value    []interface{}
+		max      int
+		expected bool
+	}{
+		{[]interface{}{1, 2, 3}, 4, true},
+		{[]interface{}{1, 2, 3}, 2, false},
+	}
+	for _, testCase := range testCases {
+		v := New()
+		v.Add("test", MaxCount(testCase.value, testCase.max))
+		if testCase.expected && v.Error() != nil {
+			t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+		}
+		if !testCase.expected && v.Error() == nil {
+			t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+		}
+	}
 }

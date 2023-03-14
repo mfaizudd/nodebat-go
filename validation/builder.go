@@ -9,7 +9,7 @@ import (
 func ValidateType[T any](value interface{}, builder *Builder) (T, bool) {
 	v, ok := value.(T)
 	if !ok {
-        builder.add(fmt.Sprintf("Invalid type: expected %T got %T, field: %v", v, value, builder.field), "invalid_type")
+		builder.add(fmt.Sprintf("Invalid type: expected %T got %T, field: %v", v, value, builder.field), "invalid_type")
 	}
 	return v, ok
 }
@@ -32,34 +32,33 @@ func (v *Builder) add(message, tag string) {
 }
 
 func (v *Builder) getInt() int64 {
-    var value int64
-    switch val := v.value.(type) {
-    case int:
-        value = int64(val)
-    case int8:
-        value = int64(val)
-    case int16:
-        value = int64(val)
-    case int32:
-        value = int64(val)
-    case int64:
-        value = val
-    case uint:
-        value = int64(val)
-    case uint8:
-        value = int64(val)
-    case uint16:
-        value = int64(val)
-    case uint32:
-        value = int64(val)
-    // Since we are using int64, we can't use uint64
-    // we can't use float32 or float64 either
-    default:
-        v.add(fmt.Sprintf("Invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
-    }
-    return value
+	var value int64
+	switch val := v.value.(type) {
+	case int:
+		value = int64(val)
+	case int8:
+		value = int64(val)
+	case int16:
+		value = int64(val)
+	case int32:
+		value = int64(val)
+	case int64:
+		value = val
+	case uint:
+		value = int64(val)
+	case uint8:
+		value = int64(val)
+	case uint16:
+		value = int64(val)
+	case uint32:
+		value = int64(val)
+	// Since we are using int64, we can't use uint64
+	// we can't use float32 or float64 either
+	default:
+		v.add(fmt.Sprintf("Invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
+	}
+	return value
 }
-
 
 // Required checks if the data is nil or empty string
 func (v *Builder) Required() *Builder {
@@ -69,30 +68,28 @@ func (v *Builder) Required() *Builder {
 
 // Min checks if the data is at least min
 //
-// Has one parameter: min (int)
+// Has one parameter: min (int64)
 func (v *Builder) Min(min int64) *Builder {
-    value := v.getInt()
-    v.validation.Add(v.field, Min(value, min))
-    return v
+	value := v.getInt()
+	v.validation.Add(v.field, Min(value, min))
+	return v
 }
 
 // Max checks if the data is at most max
 //
-// Has one parameter: max (int)
+// Has one parameter: max (int64)
 func (v *Builder) Max(max int64) *Builder {
-    value := v.getInt()
-    v.validation.Add(v.field, Max(value, max))
+	value := v.getInt()
+	v.validation.Add(v.field, Max(value, max))
 	return v
 }
 
 // Range checks if the data is between min and max
 //
-// Has two parameters: min (int) and max (int)
-func (v *Builder) Range(min, max int) *Builder {
-	value, ok := ValidateType[int](v.value, v)
-	if ok {
-		v.validation.Add(v.field, Range(value, min, max))
-	}
+// Has two parameters: min and max (int64)
+func (v *Builder) Range(min, max int64) *Builder {
+	value := v.getInt()
+	v.validation.Add(v.field, Range(value, min, max))
 	return v
 }
 
@@ -244,16 +241,16 @@ func (v *Builder) Custom(validator Validator) *Builder {
 
 // MinCount checks if the slice/array/map has a minimum number of elements
 //
-// Has one parameter: minCount (int)
-func (v *Builder) MinCount(minCount int) *Builder {
-    v.validation.Add(v.field, MinCount(v.value, minCount))
-    return v
+// Has one parameter: min (int)
+func (v *Builder) MinCount(min int) *Builder {
+	v.validation.Add(v.field, MinCount(v.value, min))
+	return v
 }
 
 // MaxCount checks if the slice/array/map has a maximum number of elements
 //
-// Has one parameter: maxCount (int)
-func (v *Builder) MaxCount(maxCount int) *Builder {
-    v.validation.Add(v.field, MaxCount(v.value, maxCount))
-    return v
+// Has one parameter: max (int)
+func (v *Builder) MaxCount(max int) *Builder {
+	v.validation.Add(v.field, MaxCount(v.value, max))
+	return v
 }

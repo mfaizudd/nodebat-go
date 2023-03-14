@@ -28,7 +28,7 @@ func Required(data interface{}) Validator {
 
 // Min checks if the data is at least min
 //
-// Has one parameter: min (int)
+// Has one parameter: min (any number type, except complex)
 func Min[T Number](data T, min T) Validator {
 	return func(field string) *FieldError {
 		msg := fmt.Sprintf("%s must be at least %v", field, min)
@@ -43,7 +43,7 @@ func Min[T Number](data T, min T) Validator {
 
 // Max checks if the data is at most max
 //
-// Has one parameter: max (int)
+// Has one parameter: max (any number type, except complex)
 func Max[T Number](data T, max T) Validator {
 	return func(field string) *FieldError {
 		msg := fmt.Sprintf("%s must be at most %v", field, max)
@@ -58,7 +58,7 @@ func Max[T Number](data T, max T) Validator {
 
 // Range checks if the data is between min and max
 //
-// Has two parameters: min (int) and max (int)
+// Has two parameters: min (any number type, except complex), max (same type as min)
 func Range[T Number](data T, min T, max T) Validator {
 	return func(field string) *FieldError {
 		msg := fmt.Sprintf("%s must be between %v and %v", field, min, max)
@@ -261,48 +261,48 @@ func BetweenDate(date time.Time, minDate time.Time, maxDate time.Time) Validator
 
 // MinCount checks if the length of the array/slice/map is greater than or equal to the given number
 //
-// Has one parameter: minCount (int)
-func MinCount(array interface{}, minCount int) Validator {
+// Has one parameter: min (int)
+func MinCount(array interface{}, min int) Validator {
 	return func(field string) *FieldError {
 		switch reflect.TypeOf(array).Kind() {
 		case reflect.Slice, reflect.Array, reflect.Map:
 			v := reflect.ValueOf(array)
-			if v.Len() < minCount {
-				msg := fmt.Sprintf("%s must have at least %d items", field, minCount)
+			if v.Len() < min {
+				msg := fmt.Sprintf("%s must have at least %d items", field, min)
 				err := NewFieldError(field, msg, "min_count", array)
-				err.SetParam("min_count", minCount)
+				err.SetParam("min_count", min)
 				return err
 			}
 		default:
 			msg := fmt.Sprintf("%s must be an array or slice", field)
 			err := NewFieldError(field, msg, "min_count", array)
-			err.SetParam("min_count", minCount)
+			err.SetParam("min_count", min)
 			return err
 		}
-        return nil
+		return nil
 	}
 }
 
 // MaxCount checks if the length of the array/slice/map is less than or equal to the given number
 //
-// Has one parameter: maxCount (int)
-func MaxCount(array interface{}, maxCount int) Validator {
+// Has one parameter: max (int)
+func MaxCount(array interface{}, max int) Validator {
 	return func(field string) *FieldError {
 		switch reflect.TypeOf(array).Kind() {
 		case reflect.Slice, reflect.Array, reflect.Map:
 			v := reflect.ValueOf(array)
-			if v.Len() > maxCount {
-				msg := fmt.Sprintf("%s must have at most %d items", field, maxCount)
+			if v.Len() > max {
+				msg := fmt.Sprintf("%s must have at most %d items", field, max)
 				err := NewFieldError(field, msg, "max_count", array)
-				err.SetParam("max_count", maxCount)
+				err.SetParam("max_count", max)
 				return err
 			}
 		default:
 			msg := fmt.Sprintf("%s must be an array or slice", field)
 			err := NewFieldError(field, msg, "max_count", array)
-			err.SetParam("max_count", maxCount)
+			err.SetParam("max_count", max)
 			return err
 		}
-        return nil
+		return nil
 	}
 }
