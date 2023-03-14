@@ -269,13 +269,13 @@ func MinCount(array interface{}, min int) Validator {
 			v := reflect.ValueOf(array)
 			if v.Len() < min {
 				msg := fmt.Sprintf("%s must have at least %d items", field, min)
-				err := NewFieldError(field, msg, "min", array)
+				err := NewFieldError(field, msg, "min_count", array)
 				err.SetParam("min", min)
 				return err
 			}
 		default:
 			msg := fmt.Sprintf("%s must be an array or slice", field)
-			err := NewFieldError(field, msg, "min", array)
+			err := NewFieldError(field, msg, "min_count", array)
 			err.SetParam("min", min)
 			return err
 		}
@@ -293,13 +293,13 @@ func MaxCount(array interface{}, max int) Validator {
 			v := reflect.ValueOf(array)
 			if v.Len() > max {
 				msg := fmt.Sprintf("%s must have at most %d items", field, max)
-				err := NewFieldError(field, msg, "max", array)
+				err := NewFieldError(field, msg, "max_count", array)
 				err.SetParam("max", max)
 				return err
 			}
 		default:
 			msg := fmt.Sprintf("%s must be an array or slice", field)
-			err := NewFieldError(field, msg, "max", array)
+			err := NewFieldError(field, msg, "max_count", array)
 			err.SetParam("max", max)
 			return err
 		}
