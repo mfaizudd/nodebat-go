@@ -254,3 +254,9 @@ func (v *Builder) MaxCount(max int) *Builder {
 	v.validation.Add(v.field, MaxCount(v.value, max))
 	return v
 }
+
+// Numeric checks if the value is a number
+func (v *Builder) Numeric() *Builder {
+    v.validation.Add(v.field, Numeric(v.value))
+    return v
+}
