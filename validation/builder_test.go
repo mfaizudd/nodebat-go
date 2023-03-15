@@ -63,8 +63,8 @@ func TestValidateIsCorrect(t *testing.T) {
 		MinCount(1).
 		MaxCount(10)
 
-    v.Builder("numeric", 1).
-        Numeric()
+	v.Builder("numeric", 1).
+		Numeric()
 
 	err := v.Error()
 	if err != nil {

@@ -310,22 +310,22 @@ func MaxCount(array interface{}, max int) Validator {
 
 // Numeric checks if the given value is a number
 func Numeric(value interface{}) Validator {
-    return func(field string) *FieldError {
-        msg := fmt.Sprintf("%s must be a number", field)
-        fieldError := NewFieldError(field, msg, "numeric", value)
-        switch reflect.TypeOf(value).Kind() {
-        case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
-            reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
-            reflect.Float32, reflect.Float64:
-            return nil
-        case reflect.String:
-            _, err := strconv.ParseFloat(value.(string), 64)
-            if err != nil {
-                return fieldError
-            }
-            return nil
-        default:
-            return fieldError
-        }
-    }
+	return func(field string) *FieldError {
+		msg := fmt.Sprintf("%s must be a number", field)
+		fieldError := NewFieldError(field, msg, "numeric", value)
+		switch reflect.TypeOf(value).Kind() {
+		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+			reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64,
+			reflect.Float32, reflect.Float64:
+			return nil
+		case reflect.String:
+			_, err := strconv.ParseFloat(value.(string), 64)
+			if err != nil {
+				return fieldError
+			}
+			return nil
+		default:
+			return fieldError
+		}
+	}
 }

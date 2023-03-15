@@ -257,6 +257,6 @@ func (v *Builder) MaxCount(max int) *Builder {
 
 // Numeric checks if the value is a number
 func (v *Builder) Numeric() *Builder {
-    v.validation.Add(v.field, Numeric(v.value))
-    return v
+	v.validation.Add(v.field, Numeric(v.value))
+	return v
 }
