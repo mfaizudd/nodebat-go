@@ -515,3 +515,27 @@ func TestMaxCount(t *testing.T) {
 		}
 	}
 }
+
+func TestNumeric(t *testing.T) {
+    testCases := []struct {
+        value    interface{}
+        expected bool
+    }{
+        {1, true},
+        {1.0, true},
+        {"1", true},
+        {"1.0", true},
+        {"1.0.0", false},
+        {"a", false},
+    }
+    for _, testCase := range testCases {
+        v := New()
+        v.Add("test", Numeric(testCase.value))
+        if testCase.expected && v.Error() != nil {
+            t.Fatalf(`value %q is invalid, it should be valid`, testCase.value)
+        }
+        if !testCase.expected && v.Error() == nil {
+            t.Fatalf(`value %q is valid, it should be invalid`, testCase.value)
+        }
+    }
+}
