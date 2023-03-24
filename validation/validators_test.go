@@ -352,6 +352,8 @@ func TestIsPhone(t *testing.T) {
 		{"+6281234567890", true},
 		{"a phone", false},
 		{"085211111111", true},
+		{"123412341234", false},
+		{"81234567890", false},
 	}
 	for _, testCase := range testCases {
 		v := New()

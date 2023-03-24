@@ -184,7 +184,7 @@ func IsISO8601Date(date string) Validator {
 // IsPhone checks if the data is a valid phone number
 func IsPhone(phone string) Validator {
 	return func(field string) *FieldError {
-		if !regexp.MustCompile(`^(\+?)([0-9])+$`).Match([]byte(phone)) {
+		if !regexp.MustCompile(`^(\+|0)([0-9])+$`).Match([]byte(phone)) {
 			msg := fmt.Sprintf("%s is not a valid phone number", field)
 			return NewFieldError(field, msg, "is_phone", phone)
 		}

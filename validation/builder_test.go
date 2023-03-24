@@ -41,7 +41,7 @@ func TestValidateIsCorrect(t *testing.T) {
 	v.Builder("is_iso8601date", "2014-01-01").
 		IsISO8601Date()
 
-	v.Builder("is_phone", "1234567890").
+	v.Builder("is_phone", "081234123412").
 		IsPhone()
 
 	v.Builder("is_uuid", "6ba7b810-9dad-11d1-80b4-00c04fd430c8").
