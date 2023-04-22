@@ -64,7 +64,7 @@ func (v *Builder) getUint() uint64 {
 	case uint64:
 		value = val
 	default:
-		v.add(fmt.Sprintf("Validation invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
+		v.add(fmt.Sprintf("Validation invalid type: expected uint got %T, field: %v", v.value, v.field), "invalid_type")
 	}
 	return value
 }
@@ -77,7 +77,7 @@ func (v *Builder) getFloat() float64 {
 	case float64:
 		value = val
 	default:
-		v.add(fmt.Sprintf("Validation invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
+		v.add(fmt.Sprintf("Validation invalid type: expected float got %T, field: %v", v.value, v.field), "invalid_type")
 	}
 	return value
 }

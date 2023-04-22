@@ -13,8 +13,22 @@ func TestValidateIsCorrect(t *testing.T) {
 		MinInt(5).
 		MaxInt(10)
 
+	v.Builder("minmax", uint(6)).
+		MinUint(5).
+		MaxUint(10)
+
+	v.Builder("minmax", float32(6)).
+		MinFloat(5).
+		MaxFloat(10)
+
 	v.Builder("range", 6).
 		RangeInt(5, 10)
+
+	v.Builder("range", uint(6)).
+		RangeUint(5, 10)
+
+	v.Builder("range", float32(6)).
+		RangeFloat(5, 10)
 
 	v.Builder("required", "test").
 		Required()
