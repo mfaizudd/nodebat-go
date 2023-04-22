@@ -10,11 +10,11 @@ func TestValidateIsCorrect(t *testing.T) {
 
 	//         field, value
 	v.Builder("minmax", 6).
-		Min(5).
-		Max(10)
+		MinInt(5).
+		MaxInt(10)
 
 	v.Builder("range", 6).
-		Range(5, 10)
+		RangeInt(5, 10)
 
 	v.Builder("required", "test").
 		Required()
@@ -85,7 +85,7 @@ func TestBuilder(t *testing.T) {
 func TestValidateType(t *testing.T) {
 	v := New()
 	vb := NewBuilder(v, "field", "6")
-	vb.Min(5)
+	vb.MinInt(5)
 	err := v.Error()
 	if err == nil {
 		t.Error("Expected error to be not nil")

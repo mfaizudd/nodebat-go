@@ -44,18 +44,40 @@ func (v *Builder) getInt() int64 {
 		value = int64(val)
 	case int64:
 		value = val
-	case uint:
-		value = int64(val)
-	case uint8:
-		value = int64(val)
-	case uint16:
-		value = int64(val)
-	case uint32:
-		value = int64(val)
-	// Since we are using int64, we can't use uint64
-	// we can't use float32 or float64 either
 	default:
-		v.add(fmt.Sprintf("Invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
+		v.add(fmt.Sprintf("Validation invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
+	}
+	return value
+}
+
+func (v *Builder) getUint() uint64 {
+	var value uint64
+	switch val := v.value.(type) {
+	case uint:
+		value = uint64(val)
+	case uint8:
+		value = uint64(val)
+	case uint16:
+		value = uint64(val)
+	case uint32:
+		value = uint64(val)
+	case uint64:
+		value = val
+	default:
+		v.add(fmt.Sprintf("Validation invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
+	}
+	return value
+}
+
+func (v *Builder) getFloat() float64 {
+	var value float64
+	switch val := v.value.(type) {
+	case float32:
+		value = float64(val)
+	case float64:
+		value = val
+	default:
+		v.add(fmt.Sprintf("Validation invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
 	}
 	return value
 }
@@ -66,29 +88,83 @@ func (v *Builder) Required() *Builder {
 	return v
 }
 
-// Min checks if the data is at least min
+// MinInt checks if the data is at least min
 //
 // Has one parameter: min (int64)
-func (v *Builder) Min(min int64) *Builder {
+func (v *Builder) MinInt(min int64) *Builder {
 	value := v.getInt()
 	v.validation.Add(v.field, Min(value, min))
 	return v
 }
 
-// Max checks if the data is at most max
+// MaxInt checks if the data is at most max
 //
 // Has one parameter: max (int64)
-func (v *Builder) Max(max int64) *Builder {
+func (v *Builder) MaxInt(max int64) *Builder {
 	value := v.getInt()
 	v.validation.Add(v.field, Max(value, max))
 	return v
 }
 
-// Range checks if the data is between min and max
+// RangeInt checks if the data is between min and max
 //
 // Has two parameters: min and max (int64)
-func (v *Builder) Range(min, max int64) *Builder {
+func (v *Builder) RangeInt(min, max int64) *Builder {
 	value := v.getInt()
+	v.validation.Add(v.field, Range(value, min, max))
+	return v
+}
+
+// MinUint checks if the data is at least min
+//
+// Has one parameter: min (uint64)
+func (v *Builder) MinUint(min uint64) *Builder {
+	value := v.getUint()
+	v.validation.Add(v.field, Min(value, min))
+	return v
+}
+
+// MaxUint checks if the data is at most max
+//
+// Has one parameter: max (uint64)
+func (v *Builder) MaxUint(max uint64) *Builder {
+	value := v.getUint()
+	v.validation.Add(v.field, Max(value, max))
+	return v
+}
+
+// RangeUint checks if the data is between min and max
+//
+// Has two parameters: min and max (uint64)
+func (v *Builder) RangeUint(min, max uint64) *Builder {
+	value := v.getUint()
+	v.validation.Add(v.field, Range(value, min, max))
+	return v
+}
+
+// MinFloat checks if the data is at least min
+//
+// Has one parameter: min (float64)
+func (v *Builder) MinFloat(min float64) *Builder {
+	value := v.getFloat()
+	v.validation.Add(v.field, Min(value, min))
+	return v
+}
+
+// MaxFloat checks if the data is at most max
+//
+// Has one parameter: max (float64)
+func (v *Builder) MaxFloat(max float64) *Builder {
+	value := v.getFloat()
+	v.validation.Add(v.field, Max(value, max))
+	return v
+}
+
+// RangeFloat checks if the data is between min and max
+//
+// Has two parameters: min and max (float64)
+func (v *Builder) RangeFloat(min, max float64) *Builder {
+	value := v.getFloat()
 	v.validation.Add(v.field, Range(value, min, max))
 	return v
 }
