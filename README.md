@@ -35,9 +35,7 @@ func (s *Student) Validate() error {
     v := validation.New()
 
     //        field , value
-    v.Builder("name", s.name).
-        Required().
-        IsAlphanumeric()
+    v.Builder("name", s.name).Required().IsAlphanumeric()
 
     return v.Error()
 }
@@ -52,24 +50,24 @@ fail and return `invalid_type` tag.
 ## Built in validators
 You can use tags to translate the error message
 
-| Validator      | Tag             |
-|----------------|-----------------|
-| Required       | required        |
-| IsAlphanumeric | is_alphanumeric |
-| MinLength      | min_length      |
-| MaxLength      | max_length      |
-| Min            | min             |
-| Max            | max             |
-| Range          | range           |
-| OneOf          | one_of          |
-| IsEmail        | is_email        |
-| IsISO8601      | is_iso8601      |
-| IsISO8601Date  | is_iso8601_date |
-| IsPhone        | is_phone        |
-| IsUUID         | is_uuid         |
-| MinDate        | min_date        |
-| MaxDate        | max_date        |
-| BetweenDate    | between_date    |
+| Validator      | Tag             | Notes                                     |
+| -------------- | --------------- | ----------------------------------------- |
+| Required       | required        |                                           |
+| IsAlphanumeric | is_alphanumeric |                                           |
+| MinLength      | min_length      |                                           |
+| MaxLength      | max_length      |                                           |
+| Min            | min             | MinInt, MinUint, and MinFloat on builder  |
+| Max            | max             | MinInt, MinUint, and MinFloat on builder  |
+| Range          | range           |                                           |
+| OneOf          | one_of          |                                           |
+| IsEmail        | is_email        |                                           |
+| IsISO8601      | is_iso8601      |                                           |
+| IsISO8601Date  | is_iso8601_date |                                           |
+| IsPhone        | is_phone        |                                           |
+| IsUUID         | is_uuid         |                                           |
+| MinDate        | min_date        | Attempts to parse string if using builder |
+| MaxDate        | max_date        | Attempts to parse string if using builder |
+| BetweenDate    | between_date    | Attempts to parse string if using builder |
 
 ## Custom validators
 To create a custom validation, you simply need to create a function that 
@@ -98,5 +96,31 @@ When you're using builder, you can add arbitrary validator
 using the `Custom` method
 
 ```go
-v.Builder().Custom(SomeCustomValidator("arg1"))
+v.Builder("field", someValue).Custom(SomeCustomValidator("arg1", someValue))
 ```
+
+Or even create a validator directly
+
+```go
+v.Builder("field", someValue).Custom(func(field string) *validation.FieldError {
+    return nil
+})
+// or, if not using builder
+v.Add("field", func(field string) *validation.FieldError {
+    return nil
+})
+```
+
+## Why?
+1. Fun,
+2. It's more flexible than [package validator](https://github.com/go-playground/validator), I think.
+With this library I can use whatever logic I want in my validation.
+Like, for example, I can only validate a field if other field is empty, or
+I can validate a field against a database by providing a database connection
+dependency in the validation parameters, etc.
+3. It's simple, my brain can understand this so you can too.
+4. It still has `tags` to use with [universal-translator](https://github.com/go-playground/universal-translator).
+I actually made this library because I'm not satisfied 
+with [package validator](https://github.com/go-playground/validator)
+and I only just want to validate some simple thing anyway.
+5. I need a validation library that can return something like what laravel's validation returns.

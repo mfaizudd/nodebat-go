@@ -5,15 +5,6 @@ import (
 	"time"
 )
 
-// ValidateType validates the type of a value and adds an error to the validation object if it is not of the correct type
-func ValidateType[T any](value interface{}, builder *Builder) (T, bool) {
-	v, ok := value.(T)
-	if !ok {
-		builder.add(fmt.Sprintf("Invalid type: expected %T got %T, field: %v", v, value, builder.field), "invalid_type")
-	}
-	return v, ok
-}
-
 type Builder struct {
 	validation *Validation
 	field      string
@@ -173,7 +164,7 @@ func (v *Builder) RangeFloat(min, max float64) *Builder {
 //
 // Has one parameter: min (int)
 func (v *Builder) MinLength(min int) *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, MinLength(value, min))
 	}
@@ -184,7 +175,7 @@ func (v *Builder) MinLength(min int) *Builder {
 //
 // Has one parameter: max (int)
 func (v *Builder) MaxLength(max int) *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, MaxLength(value, max))
 	}
@@ -195,7 +186,7 @@ func (v *Builder) MaxLength(max int) *Builder {
 //
 // Has one parameter: length (int)
 func (v *Builder) Length(min, max int) *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, Length(value, min, max))
 	}
@@ -206,7 +197,7 @@ func (v *Builder) Length(min, max int) *Builder {
 //
 // Has one parameter named "collection" which is a slice of strings
 func (v *Builder) OneOf(values ...string) *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, OneOf(value, values...))
 	}
@@ -215,7 +206,7 @@ func (v *Builder) OneOf(values ...string) *Builder {
 
 // IsEmail checks if the data is a valid email address
 func (v *Builder) IsEmail() *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, IsEmail(value))
 	}
@@ -224,7 +215,7 @@ func (v *Builder) IsEmail() *Builder {
 
 // IsAlphanumeric checks if the data is alphanumeric excluding space
 func (v *Builder) IsAlphanumeric() *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, IsAlphanumeric(value))
 	}
@@ -233,7 +224,7 @@ func (v *Builder) IsAlphanumeric() *Builder {
 
 // IsISO8601 checks if the data is a valid ISO8601 date
 func (v *Builder) IsISO8601() *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, IsISO8601(value))
 	}
@@ -242,7 +233,7 @@ func (v *Builder) IsISO8601() *Builder {
 
 // IsISO8601Date checks if the data is a valid ISO8601 date
 func (v *Builder) IsISO8601Date() *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, IsISO8601Date(value))
 	}
@@ -251,7 +242,7 @@ func (v *Builder) IsISO8601Date() *Builder {
 
 // IsPhone checks if the data is a valid phone number
 func (v *Builder) IsPhone() *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, IsPhone(value))
 	}
@@ -260,7 +251,7 @@ func (v *Builder) IsPhone() *Builder {
 
 // IsUUID checks if the data is a valid UUID
 func (v *Builder) IsUUID() *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, IsUUID(value))
 	}
@@ -269,7 +260,7 @@ func (v *Builder) IsUUID() *Builder {
 
 // IsOnlyDigits checks if the data contains only digits
 func (v *Builder) IsOnlyDigits() *Builder {
-	value, ok := ValidateType[string](v.value, v)
+	value, ok := validateType[string](v.value, v)
 	if ok {
 		v.validation.Add(v.field, IsOnlyDigits(value))
 	}
@@ -280,7 +271,7 @@ func (v *Builder) IsOnlyDigits() *Builder {
 //
 // Has one parameter: minDate (time.Time)
 func (v *Builder) MinDate(minDate time.Time) *Builder {
-	value, ok := ValidateType[time.Time](v.value, v)
+	value, ok := parseTime(v.value, v)
 	if ok {
 		v.validation.Add(v.field, MinDate(value, minDate))
 	}
@@ -291,7 +282,7 @@ func (v *Builder) MinDate(minDate time.Time) *Builder {
 //
 // Has one parameter: maxDate (time.Time)
 func (v *Builder) MaxDate(maxDate time.Time) *Builder {
-	value, ok := ValidateType[time.Time](v.value, v)
+	value, ok := parseTime(v.value, v)
 	if ok {
 		v.validation.Add(v.field, MaxDate(value, maxDate))
 	}
@@ -302,7 +293,7 @@ func (v *Builder) MaxDate(maxDate time.Time) *Builder {
 //
 // Has two parameters: minDate (time.Time), maxDate (time.Time)
 func (v *Builder) BetweenDate(minDate, maxDate time.Time) *Builder {
-	value, ok := ValidateType[time.Time](v.value, v)
+	value, ok := parseTime(v.value, v)
 	if ok {
 		v.validation.Add(v.field, BetweenDate(value, minDate, maxDate))
 	}

@@ -68,8 +68,15 @@ func TestValidateIsCorrect(t *testing.T) {
 		MinDate(time.Now().AddDate(0, 0, -1)).
 		MaxDate(time.Now().AddDate(0, 0, 1))
 
+	v.Builder("min_max_date", "2009-12-12").
+		MinDate(time.Date(2009, 12, 11, 0, 0, 0, 0, time.UTC)).
+		MaxDate(time.Date(2009, 12, 13, 0, 0, 0, 0, time.UTC))
+
 	v.Builder("between_date", time.Now()).
 		BetweenDate(time.Now().AddDate(0, 0, -1), time.Now().AddDate(0, 0, 1))
+
+	v.Builder("between_date", "2009-12-12").
+		BetweenDate(time.Date(2009, 12, 11, 0, 0, 0, 0, time.UTC), time.Date(2009, 12, 13, 0, 0, 0, 0, time.UTC))
 
 	array := []string{"test", "test2"}
 
@@ -79,6 +86,10 @@ func TestValidateIsCorrect(t *testing.T) {
 
 	v.Builder("numeric", 1).
 		Numeric()
+
+	v.Builder("custom", "test").Custom(func(field string) *FieldError {
+		return nil
+	})
 
 	err := v.Error()
 	if err != nil {
