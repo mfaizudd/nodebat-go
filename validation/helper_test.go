@@ -7,17 +7,27 @@ import (
 
 func TestGetTime(t *testing.T) {
 	v := New()
-	// Test valid time
-	if _, ok := v.Builder("test", "2006-01-02T15:04:05Z").getTime(); !ok {
-		t.Error("Expected valid time")
+	validTimes := []interface{}{
+		"2000-12-02T15:04:05Z",
+		"2000-12-02",
+		time.Now(),
+		"2001-12-02 15:04:05",
+		"2010-12-02T15:04:05",
+		"12/02/2000",
+		"12-02-2000",
+		"12/02/2000 15:04:05",
+		"12-02-2000 15:04:05",
 	}
-	if _, ok := v.Builder("test", "2006-01-02").getTime(); !ok {
-		t.Error("Expected valid time")
+	// Test valid time
+	for _, validTime := range validTimes {
+		if val, ok := v.Builder("test", validTime).getTime(); !ok {
+			t.Errorf("Expected valid time, got %v", val)
+		}
 	}
 
 	// Test invalid time
-	if _, ok := v.Builder("test", "2006-01-02T15:04:05").getTime(); ok {
-		t.Error("Expected invalid time")
+	if val, ok := v.Builder("test", "lol").getTime(); ok {
+		t.Errorf("Expected invalid time, got %v", val)
 	}
 }
 
