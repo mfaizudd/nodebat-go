@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-func ptr[T any](v T) *T { return &v }
-
 func TestValidateIsCorrect(t *testing.T) {
 	v := New()
 
@@ -111,20 +109,39 @@ func TestValidateIsCorrect(t *testing.T) {
 	}
 }
 
-func TestBuilder(t *testing.T) {
+func TestMinIntRequiredNil(t *testing.T) {
+	type test struct {
+		field *int
+	}
+	case1 := test{field: nil}
 	v := New()
-	vb := NewBuilder(v, "field", "")
-	vb.Required()
+	v.Builder("minmax", case1.field).
+		Required().
+		RangeInt(0, 6)
 	err := v.Error()
 	if err == nil {
 		t.Error("Expected error to be not nil")
 	}
 }
 
-func TestValidateType(t *testing.T) {
+func TestMinIntNil(t *testing.T) {
+	type test struct {
+		field *int
+	}
+	case1 := test{field: nil}
 	v := New()
-	vb := NewBuilder(v, "field", "6")
-	vb.MinInt(5)
+	v.Builder("minmax", case1.field).
+		RangeInt(0, 6)
+	err := v.Error()
+	if err != nil {
+		t.Error("Expected error to be nil, got: ", err)
+	}
+}
+
+func TestBuilder(t *testing.T) {
+	v := New()
+	vb := NewBuilder(v, "field", "")
+	vb.Required()
 	err := v.Error()
 	if err == nil {
 		t.Error("Expected error to be not nil")

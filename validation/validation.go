@@ -16,7 +16,7 @@ func (v *Validation) Builder(field string, value interface{}) *Builder {
 
 func (v *Validation) Add(field string, validations ...Validator) {
 	for _, validation := range validations {
-		if v.fieldErrors[field] != nil {
+		if _, ok := v.fieldErrors[field]; ok {
 			return
 		}
 		if err := validation(field); err != nil {
