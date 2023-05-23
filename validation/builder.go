@@ -35,6 +35,16 @@ func (v *Builder) getInt() int64 {
 		value = int64(val)
 	case int64:
 		value = val
+	case *int:
+		value = int64(*val)
+	case *int8:
+		value = int64(*val)
+	case *int16:
+		value = int64(*val)
+	case *int32:
+		value = int64(*val)
+	case *int64:
+		value = *val
 	default:
 		v.add(fmt.Sprintf("Validation invalid type: expected int got %T, field: %v", v.value, v.field), "invalid_type")
 	}
@@ -54,6 +64,16 @@ func (v *Builder) getUint() uint64 {
 		value = uint64(val)
 	case uint64:
 		value = val
+	case *uint:
+		value = uint64(*val)
+	case *uint8:
+		value = uint64(*val)
+	case *uint16:
+		value = uint64(*val)
+	case *uint32:
+		value = uint64(*val)
+	case *uint64:
+		value = *val
 	default:
 		v.add(fmt.Sprintf("Validation invalid type: expected uint got %T, field: %v", v.value, v.field), "invalid_type")
 	}
@@ -67,6 +87,10 @@ func (v *Builder) getFloat() float64 {
 		value = float64(val)
 	case float64:
 		value = val
+	case *float32:
+		value = float64(*val)
+	case *float64:
+		value = *val
 	default:
 		v.add(fmt.Sprintf("Validation invalid type: expected float got %T, field: %v", v.value, v.field), "invalid_type")
 	}

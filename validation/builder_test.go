@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+func ptr[T any](v T) *T { return &v }
+
 func TestValidateIsCorrect(t *testing.T) {
 	v := New()
 
@@ -13,11 +15,23 @@ func TestValidateIsCorrect(t *testing.T) {
 		MinInt(5).
 		MaxInt(10)
 
+	v.Builder("minmax_ptr", ptr(6)).
+		MinInt(5).
+		MaxInt(10)
+
 	v.Builder("minmax", uint(6)).
 		MinUint(5).
 		MaxUint(10)
 
+	v.Builder("minmax_ptr", ptr(uint(6))).
+		MinUint(5).
+		MaxUint(10)
+
 	v.Builder("minmax", float32(6)).
+		MinFloat(5).
+		MaxFloat(10)
+
+	v.Builder("minmax_ptr", ptr(float32(6))).
 		MinFloat(5).
 		MaxFloat(10)
 
