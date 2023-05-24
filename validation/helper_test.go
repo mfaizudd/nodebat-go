@@ -41,8 +41,10 @@ func TestGetString(t *testing.T) {
 		t.Error("Expected valid string")
 	}
 
+	type nilfield struct {field *string}
+	test := &nilfield{}
 	// Test invalid string
-	if _, ok := v.Builder("test", 1).getString(); ok {
+	if _, ok := v.Builder("test", test.field).getString(); ok {
 		t.Error("Expected invalid string")
 	}
 }

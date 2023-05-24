@@ -1,9 +1,15 @@
 package validation
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 )
+
+func (v *Builder) add(message, tag string) {
+	err := NewFieldError(v.field, message, tag, v.value)
+	v.validation.AddError(v.field, err)
+}
 
 // getTime parses a time.Time from a string or time.Time and returns the time.Time and a bool indicating if the parsing was successful
 // If the parsing was not successful, the time.Time will be the zero value
@@ -43,6 +49,7 @@ func (v *Builder) getTime() (time.Time, bool) {
 			}
 		}
 	}
+	v.add("invalid time", "invalid_time")
 	return time.Time{}, false
 }
 
@@ -70,7 +77,7 @@ func (v *Builder) getString() (string, bool) {
 		}
 		value = *val
 	default:
-		return "", false
+		value = fmt.Sprintf("%v", v.value)
 	}
 	return value, true
 }
@@ -115,18 +122,18 @@ func (v *Builder) getInt() (int64, bool) {
 			return 0, false
 		}
 		value = int64(floatval)
-	case string, *string:
+	default:
 		stringval, ok := v.getString()
 		if !ok {
+			v.add("Invalid integer", "invalid_integer")
 			return 0, false
 		}
 		value, err := strconv.ParseInt(stringval, 10, 64)
 		if err != nil {
+			v.add("Invalid integer", "invalid_integer")
 			return 0, false
 		}
 		return value, true
-	default:
-		return 0, false
 	}
 	return value, true
 }
@@ -165,18 +172,18 @@ func (v *Builder) getUint() (uint64, bool) {
 	case float32, float64, *float32, *float64:
 		floatval, ok := v.getFloat()
 		return uint64(floatval), ok
-	case string, *string:
+	default:
 		stringval, ok := v.getString()
 		if !ok {
+			v.add("Invalid integer", "invalid_integer")
 			return 0, false
 		}
 		value, err := strconv.ParseUint(stringval, 10, 64)
 		if err != nil {
+			v.add("Invalid integer", "invalid_integer")
 			return 0, false
 		}
 		return value, true
-	default:
-		return 0, false
 	}
 	return value, true
 }
@@ -200,18 +207,18 @@ func (v *Builder) getFloat() (float64, bool) {
 	case uint, uint8, uint16, uint32, uint64, *uint, *uint8, *uint16, *uint32, *uint64:
 		uintval, ok := v.getUint()
 		return float64(uintval), ok
-	case string, *string:
+	default:
 		stringval, ok := v.getString()
 		if !ok {
+			v.add("Invalid float", "invalid_float")
 			return 0, false
 		}
 		value, err := strconv.ParseFloat(stringval, 64)
 		if err != nil {
+			v.add("Invalid float", "invalid_float")
 			return 0, false
 		}
 		return value, true
-	default:
-		return 0, false
 	}
 	return value, true
 }
