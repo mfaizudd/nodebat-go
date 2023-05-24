@@ -41,33 +41,31 @@ func (s *Student) Validate() error {
 }
 ```
 
-However, when using builder, you will lose the ability of
-compile time checks of type in validators. for validators
-like min, max, etc. where if the value is not the specific
-type that's required by the validator, the validation will
-fail and return `invalid_type` tag.
+Using the builder, the validator will attempt to convert the type into the correct type,
+and if it fails to do so, it will return `invalid_integer`, `invalid_float`
+`invalid_time` depending on the validator thats being used
 
 ## Built in validators
 You can use tags to translate the error message
 
-| Validator      | Tag             | Notes                                     |
-| -------------- | --------------- | ----------------------------------------- |
-| Required       | required        |                                           |
-| IsAlphanumeric | is_alphanumeric |                                           |
-| MinLength      | min_length      |                                           |
-| MaxLength      | max_length      |                                           |
-| Min            | min             | MinInt, MinUint, and MinFloat on builder  |
-| Max            | max             | MinInt, MinUint, and MinFloat on builder  |
-| Range          | range           |                                           |
-| OneOf          | one_of          |                                           |
-| IsEmail        | is_email        |                                           |
-| IsISO8601      | is_iso8601      |                                           |
-| IsISO8601Date  | is_iso8601_date |                                           |
-| IsPhone        | is_phone        |                                           |
-| IsUUID         | is_uuid         |                                           |
-| MinDate        | min_date        | Attempts to parse string if using builder |
-| MaxDate        | max_date        | Attempts to parse string if using builder |
-| BetweenDate    | between_date    | Attempts to parse string if using builder |
+| Validator      | Tag             |
+| -------------- | --------------- |
+| Required       | required        |
+| IsAlphanumeric | is_alphanumeric |
+| MinLength      | min_length      |
+| MaxLength      | max_length      |
+| Min            | min             |
+| Max            | max             |
+| Range          | range           |
+| OneOf          | one_of          |
+| IsEmail        | is_email        |
+| IsISO8601      | is_iso8601      |
+| IsISO8601Date  | is_iso8601_date |
+| IsPhone        | is_phone        |
+| IsUUID         | is_uuid         |
+| MinDate        | min_date        |
+| MaxDate        | max_date        |
+| BetweenDate    | between_date    |
 
 ## Custom validators
 To create a custom validation, you simply need to create a function that 
