@@ -27,9 +27,10 @@ func (v *Builder) getTime() (time.Time, bool) {
 	switch val := v.value.(type) {
 	case time.Time:
 		return val, true
-	case string, *string:
+	default:
 		stringval, ok := v.getString()
 		if !ok {
+			v.add("invalid time", "invalid_time")
 			return time.Time{}, false
 		}
 		parsingLayouts := []string{
